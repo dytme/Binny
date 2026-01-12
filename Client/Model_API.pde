@@ -4,11 +4,12 @@
 
 // Importing the new Java HTTP Client, which is nicer to use than the older method(s).
 
-// TODO: Credit Oracle?
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
+import java.util.concurrent.CompletableFuture;
 
 HttpClient client;
 String detectAPI = "http://localhost:3000/detect";
@@ -27,9 +28,14 @@ void httpConnectionSetup() {
   println("Http client created!");
   
   // Load in JSON files.
-  nameMap = loadJSONObject("name_map.json");
-  binMap = loadJSONObject("bin_map.json");
+  nameMap = loadJSONObject("tables/name_map.json");
+  binMap = loadJSONObject("tables/bin_map.json");
 }
+
+
+
+
+
 
 // █▀█ █▀▀ █▀█ █░█ █▀▀ █▀ ▀█▀   █▀▄ █▀▀ ▀█▀ █▀▀ █▀▀ ▀█▀ █ █▀█ █▄░█
 // █▀▄ ██▄ ▀▀█ █▄█ ██▄ ▄█ ░█░   █▄▀ ██▄ ░█░ ██▄ █▄▄ ░█░ █ █▄█ █░▀█
@@ -47,14 +53,16 @@ String requestDetection(String filePath) {
   
   // Huge thanks to baeldung.com for the guide on setting up the Java HTTP Client and sending POST requests through it.
   // https://www.baeldung.com/java-httpclient-post#bd-preparing-a-post-request
+
+  
+
   HttpRequest req = HttpRequest.newBuilder()
     .uri(URI.create(detectAPI))
     .header("Content-Type", "image/jpeg")
     .POST(HttpRequest.BodyPublishers.ofByteArray(image))
     .build();
-    
   println("Http Request Built");
-    
+
   try {
     
     println("Sending request to server");
@@ -66,14 +74,23 @@ String requestDetection(String filePath) {
   } catch (IOException e) {
     println("Connection to the Model API failed. Full error:");
     println(e);
+    SHOW_ERROR("502", ("Connection to the Model API Failed. " + e));
     return "-2";
   } catch (InterruptedException e) {
     println("Server connection interrupted");
     println(e);
+    SHOW_ERROR("522", ("Server connection interrupted. " + e));
     return "-2";
   }
   
 }
+
+
+
+
+// █▀█ █▀█ █▀█ █▀▀ █▀▀ █▀ █▀   █▀█ █▀▀ █▀ █░█ █░░ ▀█▀ █▀
+// █▀▀ █▀▄ █▄█ █▄▄ ██▄ ▄█ ▄█   █▀▄ ██▄ ▄█ █▄█ █▄▄ ░█░ ▄█
+
 
 // Attribute the int result returned by the model with an actual object and disposal category.
 void processModelResult(String result) {
@@ -81,7 +98,8 @@ void processModelResult(String result) {
   // Turn the String back into an integer. Used to determine errors (any result < 0 is an error/issue);
   int intResult = Integer.parseInt(result);
   
-  // Any result smaller than -2 implies an error. If that's the case, we'll print nothing.
+  // Any result smaller than -2 implies an error. If that's the case, we'll have a specific error splash screen.
+  // But from the perspective of this method, nothing is relevant. Error handling happens before this point.
   if (intResult <= -2) return;
   
   // Set up default answers.
@@ -105,17 +123,40 @@ void processModelResult(String result) {
   println("==========================");
   
   // TODO: Implement Hardware Behaviour and Explicit Output based on disposalCategory
+  actOnDetection(disposalCategory);
+
+}
+
+
+
+void actOnDetection(String disposalCategory) {
+
   switch (disposalCategory) {
+
     case "RESIDUAL":
+      RESULT_RESIDUAL();
       break;
-    case "PLASTIC":
+
+    case "PLASTIC":  
+      RESULT_PLASTIC();
       break;
+
     case "PAPER":
+      RESULT_SERVICE_DESK();
       break;
+
     case "SERVICE_DESK":
+      RESULT_SERVICE_DESK();
       break;
+
+    case "ORGANIC":
+      RESULT_ORGANIC();  
+      break;
+    
     default:
+      RESULT_RESIDUAL();
       break;
+
   }
-  
+
 }
