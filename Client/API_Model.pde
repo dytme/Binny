@@ -40,13 +40,15 @@ void httpConnectionSetup() {
 // █▀█ █▀▀ █▀█ █░█ █▀▀ █▀ ▀█▀   █▀▄ █▀▀ ▀█▀ █▀▀ █▀▀ ▀█▀ █ █▀█ █▄░█
 // █▀▄ ██▄ ▀▀█ █▄█ ██▄ ▄█ ░█░   █▄▀ ██▄ ░█░ ██▄ █▄▄ ░█░ █ █▄█ █░▀█
 
-String requestDetection(String filePath) {
+CompletableFuture<String> requestDetection(String filePath) {
   
   println("Client detection request");
+  
   byte[] image = loadBytes(filePath);
   
   if (image == null) {
-    return "Invalid image at filepath.";
+    println("Invalid image at filepath.");
+    return null;
   }
   
   println("Image loaded in");
@@ -54,14 +56,42 @@ String requestDetection(String filePath) {
   // Huge thanks to baeldung.com for the guide on setting up the Java HTTP Client and sending POST requests through it.
   // https://www.baeldung.com/java-httpclient-post#bd-preparing-a-post-request
 
-  
-
+  // HTTP Request Body
   HttpRequest req = HttpRequest.newBuilder()
     .uri(URI.create(detectAPI))
     .header("Content-Type", "image/jpeg")
     .POST(HttpRequest.BodyPublishers.ofByteArray(image))
     .build();
   println("Http Request Built");
+
+  // Send an asynchronous request to the server to analyze our object.
+  return client.sendAsync(req, HttpResponse.BodyHandlers.ofString())
+  
+  .thenApply(res -> {
+    int statusCode = res.statusCode();
+    String detectionResult = res.body();
+    
+    println("Received Response from HTTP Server.");
+    println("Status: " + statusCode);
+
+    // Check if the response is an error. If so, log it to the console and show the error.
+    if (statusCode >= 300) {
+      println("Error Body: " + detectionResult);
+      SHOW_ERROR(Integer.toString(statusCode), detectionResult);
+    }    
+
+    // Otherwise, return the detection result.
+    return detectionResult;
+  })
+
+  // If there's an exception in the connection, use the CloudFlare status code and showcase it.
+  .exceptionally(exception -> {
+    println("Error Body: " + exception);
+    SHOW_ERROR("522", exception.toString());
+    return "-2";
+  });
+
+  /*
 
   try {
     
@@ -82,6 +112,7 @@ String requestDetection(String filePath) {
     SHOW_ERROR("522", ("Server connection interrupted. " + e));
     return "-2";
   }
+  */
   
 }
 
@@ -122,7 +153,6 @@ void processModelResult(String result) {
   println("Disposal: " + disposalCategory);
   println("==========================");
   
-  // TODO: Implement Hardware Behaviour and Explicit Output based on disposalCategory
   actOnDetection(disposalCategory);
 
 }
@@ -131,30 +161,35 @@ void processModelResult(String result) {
 
 void actOnDetection(String disposalCategory) {
 
+  println("actOnDetection() Ran");
+
+  // TODO: By setting the currentScene to a specific category, instead of calling on that scene directly, we allow processing to handle this request on it's own render loop.
+  //       Because we're using Asynchronous calling, the result may come at an 'unfortunate' time for Processing and cause a plethora of visual bugs and glitches otherwise.
   switch (disposalCategory) {
 
-    case "RESIDUAL":
-      RESULT_RESIDUAL();
-      break;
-
     case "PLASTIC":  
-      RESULT_PLASTIC();
+    println("Ran Plastic.");
+      currentScene = "PLASTIC";
       break;
 
     case "PAPER":
-      RESULT_SERVICE_DESK();
+    println("Ran Paper.");
+      currentScene = "PAPER";
       break;
 
     case "SERVICE_DESK":
-      RESULT_SERVICE_DESK();
+    println("Ran ServiceDesk.");
+      currentScene = "SERVICE_DESK";
       break;
 
     case "ORGANIC":
-      RESULT_ORGANIC();  
+    println("Ran Organic.");
+      currentScene = "ORGANIC";
       break;
     
     default:
-      RESULT_RESIDUAL();
+      println("Ran Residual.");
+      currentScene = "RESIDUAL";
       break;
 
   }

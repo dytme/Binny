@@ -54,13 +54,27 @@ PImage takePhoto() {
 
 }
 
+// Save a valid camera feed as a local file for the model to reference.
 void captureFeed() {
 
+  /*
     // Capture the webcam's feed
     PImage cameraOutput = takePhoto();
 
-    if (cameraOutput == null) return;
-    cameraOutput.save("data/cameraoutput.jpg"); // Save the image (if it exists) to the drive.
-    image(cameraOutput, 0, 0); // Preview the image.
+    println("Camera output: " + cameraOutput);
+    //if (cameraOutput == null) return;
 
+    while (cameraOutput == null) delay(10);
+
+    println("Capturing image");
+    cameraOutput.save("data/cameraoutput.jpg"); // Save the image (if it exists) to the drive.
+  */
+
+  while (lastValidCameraFeed == null) {
+    println("Waiting for valid camera feed");
+    delay(20);
+  }
+
+  lastValidCameraFeed.save("data/cameraoutput.jpg");
+    
 }

@@ -13,13 +13,14 @@ Scenes that render based on the model's detection result.
 */
 
 
+
 //█▀ █░█ ▄▀█ █▀█ █▀▀ █▀▄   ▄▀█ █▀ █▀ █▀▀ ▀█▀ █▀
 //▄█ █▀█ █▀█ █▀▄ ██▄ █▄▀   █▀█ ▄█ ▄█ ██▄ ░█░ ▄█
 
 class ResultCard{
     PImage resultIcon;
     String content;
-    color cardColor;
+    color cardColor = -1; // By default, it will have no background/color
 
     float xSize, ySize;
     float xPos = 0;
@@ -32,6 +33,9 @@ class ResultCard{
 
     void render() {
 
+        noStroke();
+
+        // Draw background for the card.
         fill(cardColor);
         rect(xPos, 0, xSize, ySize);
 
@@ -103,17 +107,18 @@ void RESULT_ORGANIC() {
         delay(splashScreenDuration);
     } else {
 
-        background(#AEC036);
+        color resultColor = #AEC036;
+
+        background(resultColor);
         
-        ResultCard organic = new ResultCard("ORGANIC", #AEC036, "result_icons/ORGANIC.png");
+        ResultCard organic = new ResultCard("ORGANIC", resultColor, "result_icons/ORGANIC.png");
         organic.xSize = width;
         organic.ySize = height;
         organic.render();
 
-
         renderResultSceneTitle("MY GUESS IS");
-        
 
+        factLabel.yPos = height*4/5;
         factLabel.content = "Did you know: The University will (most likely) use\nwhat you're about to throw out as Biofuel to heat the buildings on campus?";
         factLabel.render();
 
@@ -152,6 +157,9 @@ void RESULT_PLASTIC() {
         
 
         // Fact Label
+        textFont(robotoMono48);
+
+        factLabel.yPos = height*4/5;
         factLabel.content = "You may throw this item into the ORANGE bin,\nas long as it is not dirty or contaminated with food.";
         factLabel.render();
 
@@ -170,7 +178,7 @@ void RESULT_PLASTIC() {
 
 void RESULT_PAPER() {
     
-    currentScene = "PLASTIC";
+    currentScene = "PAPER";
 
     if (sceneLoaded) { 
         delay(splashScreenDuration);
@@ -191,6 +199,9 @@ void RESULT_PAPER() {
         
 
         // Fact Label
+        textFont(robotoMono48);
+
+        factLabel.yPos = height*4/5;
         factLabel.content = "You may throw this item into the BLUE bin,\nas long as it is not dirty or contaminated with food.";
         factLabel.render();
 
@@ -211,13 +222,19 @@ void RESULT_RESIDUAL() {
     
     currentScene = "RESIDUAL";
 
+    println("Residual Waste Scene Loaded In.");
+
     if (sceneLoaded) { 
+        println("Applying Delay for the result to be properly shown.");
         delay(splashScreenDuration);
     } else {
 
-        background(#AEC036);
+        println("Applying visual state of the scene");
+        color resultColor = #9D9999;
         
-        ResultCard organic = new ResultCard("RESIDUAL WASTE", #9D9999, "result_icons/RESIDUAL.png");
+        background(resultColor);
+        
+        ResultCard organic = new ResultCard("RESIDUAL WASTE", resultColor, "result_icons/RESIDUAL.png");
         organic.xSize = width;
         organic.ySize = height;
         organic.render();
@@ -225,15 +242,19 @@ void RESULT_RESIDUAL() {
 
         renderResultSceneTitle("MY GUESS IS");
         
-
+        factLabel.yPos = height*4/5;
         factLabel.content = "Unfortunately, there's a chance that this item is not recyclable.\nWhen in doubt, it's better to be safe than to contaminate a recycling plant.";
         factLabel.render();
+
+        println("Stating that the scene was loaded in properly");
 
         sceneLoaded = true;
         return;
 
 
     }
+
+    println("Scene finished showing. Returning to the default scene.");
 
     sceneLoaded = false;
 
@@ -260,7 +281,7 @@ void RESULT_SERVICE_DESK() {
 
         renderResultSceneTitle("MY GUESS IS");
         
-
+        factLabel.yPos = height*4/5;
         factLabel.content = "This item cannot be disposed of in a regular waste bin.\nPlease go to the nearest Service Desk (Hal 2B) in order to dispose of it properly.";
         factLabel.render();
 
@@ -305,6 +326,7 @@ void SHOW_ERROR(String errorCode, String errorMessage) {
 
         renderResultSceneTitle("ERROR");
         
+        factLabel.yPos = height*4/5;
         factLabel.content = "Unknown Error Occoured.\nIf this issue persists, please contact my administrators.";
         if (errorMessage != null) factLabel.content = errorMessage;
         factLabel.render();

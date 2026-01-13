@@ -5,12 +5,12 @@ class LoadingBobber {
   float cornerRadius = 3;
   float barHeight = 12;
   
-  float indicatorWidth = 160;
-  float barWidth = 30;
+  float indicatorWidth = 240;
+  float barWidth = 45;
   
   float barPosition = indicatorWidth/2;
   
-  float speedMultiplier = 2.25;
+  float speedMultiplier = 3.5;
   int direction = 1;
   
   
@@ -45,7 +45,7 @@ class LoadingBobber {
     // (*OPT) Draw Label
     if (labelContent != "") {
       ShadowText labelText = new ShadowText(labelContent, 0, yPos + barHeight*2, width, barHeight*2);
-      labelText.setTextSize(16);
+      labelText.setTextSize(height*1/80);
       labelText.render();
     }
   }

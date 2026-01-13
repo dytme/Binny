@@ -7,7 +7,7 @@ String randomJSONString(JSONObject jsonObj) {
   int jsonLength = jsonObj.size(); // Get the amount of strings
   String randomKey = str( (int) random(0, jsonLength) ); // Get a random key
   
-  print("Seeking index: " + randomKey + " in JSON: " + System.identityHashCode(jsonObj));
+  // print("Seeking index: " + randomKey + " in JSON: " + System.identityHashCode(jsonObj));
 
   String result = jsonObj.getString(randomKey); // Save the string.
   return result;
@@ -18,7 +18,6 @@ void renderFunFact() {
   factLabel.setTextSize(height/40);
   
   if ((globalClock) % 400 == 0) {
-    println("loading in new fun fact");
     factLabel.content = randomJSONString(funFacts);
   }
 
@@ -57,7 +56,6 @@ void binnyLogo(String mode) {
 void updateLoadingBobber() {
     // Set the label of the bobber to something funny every couple of seconds.
     if ((globalClock) % 200 == 0) {
-        println("trying out new (funny) phrase");
         loadingBobber.setLabel(randomJSONString(funnyPhrases));
     }
 
@@ -89,6 +87,7 @@ void SCENE_DEFAULT() {
 
   // Draw ViewPort
   cameraFeed();
+
   
   // fill(#C9C9C9);
   // rect(width/2, height/2, 640, 480);
