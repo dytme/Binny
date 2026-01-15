@@ -40,8 +40,11 @@ void httpConnectionSetup() {
 // █▀█ █▀▀ █▀█ █░█ █▀▀ █▀ ▀█▀   █▀▄ █▀▀ ▀█▀ █▀▀ █▀▀ ▀█▀ █ █▀█ █▄░█
 // █▀▄ ██▄ ▀▀█ █▄█ ██▄ ▄█ ░█░   █▄▀ ██▄ ░█░ ██▄ █▄▄ ░█░ █ █▄█ █░▀█
 
+
+boolean processingDetection = false;
 CompletableFuture<String> requestDetection(String filePath) {
   
+  processingDetection = true;
   println("Client detection request");
   
   byte[] image = loadBytes(filePath);
@@ -81,6 +84,7 @@ CompletableFuture<String> requestDetection(String filePath) {
     }    
 
     // Otherwise, return the detection result.
+    // processingDetection = false;
     return detectionResult;
   })
 
@@ -88,6 +92,7 @@ CompletableFuture<String> requestDetection(String filePath) {
   .exceptionally(exception -> {
     println("Error Body: " + exception);
     SHOW_ERROR("522", exception.toString());
+    // processingDetection = false;
     return "-2";
   });
   

@@ -14,6 +14,16 @@ Scenes that render based on the model's detection result.
 
 
 
+
+// █▀ █▀▀ ▀█▀ ▀█▀ █ █▄░█ █▀▀ █▀
+// ▄█ ██▄ ░█░ ░█░ █ █░▀█ █▄█ ▄█
+
+int splashScreenDuration = 7000;
+
+
+
+
+
 //█▀ █░█ ▄▀█ █▀█ █▀▀ █▀▄   ▄▀█ █▀ █▀ █▀▀ ▀█▀ █▀
 //▄█ █▀█ █▀█ █▀▄ ██▄ █▄▀   █▀█ ▄█ ▄█ ██▄ ░█░ ▄█
 
@@ -86,6 +96,16 @@ void renderAlternative() {
 }
 
 
+void clearScene() {
+
+    println("Scene finished showing. Returning to the default scene.");
+    currentScene = "DEFAULT";
+
+    renderFunFact(true); // Render a new fun fact to replace the (possible) explicit output in the label.
+
+    sceneLoaded = false;
+
+}
 
 
 
@@ -95,8 +115,6 @@ void renderAlternative() {
 // █▀▄ ██▄ ▄█ █▄█ █▄▄ ░█░   ▄█ █▄▄ ██▄ █░▀█ ██▄ ▄█
 
 boolean sceneLoaded = false;
-int splashScreenDuration = 10000;
-
 
 
 void RESULT_ORGANIC() {
@@ -128,9 +146,7 @@ void RESULT_ORGANIC() {
 
     }
 
-    sceneLoaded = false;
-
-    currentScene = "DEFAULT";
+    clearScene();
 
 }
 
@@ -169,9 +185,7 @@ void RESULT_PLASTIC() {
 
     }
 
-    sceneLoaded = false;
-
-    currentScene = "DEFAULT";
+    clearScene();
 
 }
 
@@ -211,9 +225,7 @@ void RESULT_PAPER() {
 
     }
 
-    sceneLoaded = false;
-
-    currentScene = "DEFAULT";
+    clearScene();
 
 }
 
@@ -254,11 +266,7 @@ void RESULT_RESIDUAL() {
 
     }
 
-    println("Scene finished showing. Returning to the default scene.");
-
-    sceneLoaded = false;
-
-    currentScene = "DEFAULT";
+    clearScene();
 
 }
 
@@ -291,9 +299,7 @@ void RESULT_SERVICE_DESK() {
 
     }
 
-    sceneLoaded = false;
-
-    currentScene = "DEFAULT";
+    clearScene();
 
 }
 
@@ -337,8 +343,6 @@ void SHOW_ERROR(String errorCode, String errorMessage) {
 
     }
 
-    sceneLoaded = false;
-
-    currentScene = "DEFAULT";
+    clearScene();
 
 }

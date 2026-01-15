@@ -51,6 +51,9 @@ void loadAssets() {
   // Load in JSON Objects
   funnyPhrases = loadJSONObject("tables/funny_phrases.json");
   funFacts = loadJSONObject("tables/fun_facts.json");
+
+  // Load in default Camera Viewport
+  lastValidCameraFeed = loadImage("NoActiveCameraScreen.png");
 }
 
 
@@ -94,6 +97,6 @@ void updateCurrentScene() {
     case "MAINTENANCE": SCENE_MAINTENANCE(); break;
     case "ERROR": SHOW_ERROR(null, null); break;
     case "ANALYZE": SCENE_ANALYZE(); break;
-    default: SCENE_DEFAULT(); break; // Idle
+    default: SCENE_DEFAULT(); processingDetection = false; break; // Idle
   }
 }

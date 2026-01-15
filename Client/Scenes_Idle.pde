@@ -13,11 +13,11 @@ String randomJSONString(JSONObject jsonObj) {
   return result;
 }
 
-void renderFunFact() {
+void renderFunFact(boolean force) {
   textAlign(CENTER, TOP);
   factLabel.setTextSize(height/40);
-  
-  if ((globalClock) % 400 == 0) {
+
+  if ((globalClock) % 400 == 0 || force) {
     factLabel.content = randomJSONString(funFacts);
   }
 
@@ -83,7 +83,7 @@ void SCENE_DEFAULT() {
   binnyLogo("");
 
   factLabel.yPos = height*4/5;
-  renderFunFact();
+  renderFunFact(false);
 
   // Draw ViewPort
   cameraFeed();
@@ -100,14 +100,15 @@ JSONObject funnyPhrases;
 void SCENE_ANALYZE() {
 
     currentScene = "ANALYZE";
-    background(#3DA3F8);
+    //background(#3DA3F8);
+    background(#000000);
     
     // Draw Binny Logo
     binnyLogo("CENTER");
     
     // Render fun facts while the model is working.
     factLabel.yPos = height*2.15/3;
-    renderFunFact();
+    renderFunFact(false);
 
     updateLoadingBobber();
 

@@ -32,16 +32,15 @@ void setup() {
 
 void setupInternalServices() {
   
-  httpConnectionSetup();
-  // cameraFeedSetup();
+  httpConnectionSetup(); // Establish connection to the Model API
+  if (activeCamera == "WEBCAM") cameraFeedSetup(); // OPT* Establish connection to Webcam
+  // The ESP32 Camera needs to be initialized manually through it's own utility. As such, there's no setup procedure needed in Processing.
   
-  sceneLoaded = false;
-  currentScene = "DEFAULT";
+  // Clear the loading screen.
+  clearScene();
 
 }
 
-
-boolean servicesReady = false;
 
 void draw() {
 

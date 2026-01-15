@@ -7,38 +7,47 @@ String forcedResult = "";
 
 void processCameraFeed() {
 
-  // Capture the latest safe image from the camera
-  captureFeed();
-  
-  if (forcedResult == "") {
+	// // Capture the latest safe image from the camera
+	// if (activeCamera != "NONE") captureFeed();
+	
+	println("Process Request");
 
-    println("Sending a normal request");
+	currentScene = "ANALYZE";
 
-    // Send a request to the AI and point to the newly saved image.
+	// If we're already processing another request, then don't overload the model.
+	// A client check is normally not be ideal, but in our case, the model will only ever run internally, and won't ever be exposed publicly.
+	println("Program processing older request: " + processingDetection);
+	if (processingDetection) return;
+	
+	if (forcedResult == "") {
+		println("Sending a normal request");
+		// Send a request to the AI and point to the newly saved image.
 
-    requestDetection("capture.jpg").thenAccept(result -> {
-      // Process Result
-      println("Got result of detection.");
-      processModelResult(result);
-    });
-    
+		requestDetection("esptest.jpg").thenAccept(result -> {
+		// Process Result
+		println("Got result of detection.");
+		processModelResult(result);
+		});
 
-  } else processModelResult(forcedResult);
+	} else { 
+		println("Forced result: " + forcedResult);
+		processModelResult(forcedResult);
+	}
 
 }
 
 void mousePressed() {
 
-  // If the program is already analyzing something, then do nothing
-  if (currentScene == "ANALYZE") return;
+	// If the program is not currently in "Seek Object" mode, then do nothing.
+	println("Mouse pressed");
 
-  // Set the new scene
-  SCENE_ANALYZE();
+	if (currentScene != "DEFAULT") return;
+	if (processingDetection) return;
 
-  // Process the camera feed through the AI model.
-  processCameraFeed();
+	// Process the camera feed through the AI model.
+	processCameraFeed();
+	// Returning to normal functioning (default / seeking objects) is done through processCameraFeed();
 
-  // Returning to normal functioning (default / seeking objects) is done through processCameraFeed();
 }
 
 
@@ -47,9 +56,9 @@ void mousePressed() {
 // █▄▀ ██▄ ▀▄▀ ██▄ █▄▄ █▄█ █▀▀ ██▄ █▀▄   █░▀░█ █▄█ █▄▀ ██▄
 
 void keyPressed() {
-  switch(key) {
-    case 'M': SCENE_MAINTENANCE(); break;
-    case 'H': SCENE_DEFAULT(); break;
-    default: break;
-  }
+	switch(key) {
+		case 'm': SCENE_MAINTENANCE(); break;
+		case 'h': SCENE_DEFAULT(); break;
+		default: break;
+	}
 }
