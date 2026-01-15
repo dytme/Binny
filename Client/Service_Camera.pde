@@ -2,6 +2,9 @@
 // █▀█ █▀▀ █▀█ █░█ █ █▀█ █▀▀ █▀▄▀█ █▀▀ █▄░█ ▀█▀ █▀
 // █▀▄ ██▄ ▀▀█ █▄█ █ █▀▄ ██▄ █░▀░█ ██▄ █░▀█ ░█░ ▄█
 
+// For the purposes of avoiding any demo-day curses, we have left the code required to get the program to work with a webcam in here.
+// Ideally, we would't be this using this, but rather the ESP32 camera.
+
 /*
 Processing Video Library
 @ Processing Foundation
@@ -23,21 +26,46 @@ void cameraFeedSetup() {
 }
 
 
+String camIP = "10.160.37.57";
+String picURL = "http://" + camIP + "/capture";
+
 PImage lastValidCameraFeed;
 void cameraFeed() {
 
   // If the video service hasn't been loaded in yet, return.
-  if (video == null) return;
+  // if (video == null) return;
 
-  rectMode(CENTER);
-
+  
   // If there's a newer image available, load that one in. Otherwise, keep the older one loaded in.
   // This is used to combat framerate differences between the camera and our program. Our program runs at 60 FPS, while the webcam or ESP camera run at much lower frame rates.
+  /*
   if (video.available()) {
-      video.read();
-      lastValidCameraFeed = video;
-  } 
+    video.read();
+    lastValidCameraFeed = video;
+    } 
+  */
 
+  println("actively capturing field");
+
+  try {
+    byte[] pic = loadBytes(picURL);
+    // println(pic);
+    // if (pic != null) println(pic.length);
+    if (pic != null && pic.length > 0) {  
+      saveBytes("data/capture.jpg", pic);
+      lastValidCameraFeed = loadImage("capture.jpg");
+      println("Picture taken and saved as 'capture.jpg' (" + pic.length + " bytes)");
+    } else { 
+      println("Picture failed (null/0 bytes");
+      // SHOW_ERROR("404", "Camera stream not found or invalidated.");
+    }
+  } catch (Exception e) {
+    println("Capture error: " + e);
+  }
+    
+    
+    
+    rectMode(CENTER);
   if (lastValidCameraFeed != null) image(lastValidCameraFeed, width/2 - 320, height/2 - 240, 640, 480);
 }
 

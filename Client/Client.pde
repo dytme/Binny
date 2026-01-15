@@ -33,7 +33,7 @@ void setup() {
 void setupInternalServices() {
   
   httpConnectionSetup();
-  cameraFeedSetup();
+  // cameraFeedSetup();
   
   sceneLoaded = false;
   currentScene = "DEFAULT";

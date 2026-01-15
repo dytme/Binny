@@ -16,7 +16,7 @@ void processCameraFeed() {
 
     // Send a request to the AI and point to the newly saved image.
 
-    requestDetection("cameraoutput.jpg").thenAccept(result -> {
+    requestDetection("capture.jpg").thenAccept(result -> {
       // Process Result
       println("Got result of detection.");
       processModelResult(result);
