@@ -15,6 +15,24 @@ Software Created by @d_ytme (Sammy)
 
 */
 
+
+
+// █▀ █▀▀ ▀█▀ ▀█▀ █ █▄░█ █▀▀ █▀
+// ▄█ ██▄ ░█░ ░█░ █ █░▀█ █▄█ ▄█
+
+String activeCamera = "ESP32";
+
+int splashScreenDuration = 5000;
+
+// If this is set to anything but "", then it will force a fake result (for testing purposes)
+String forcedResult = "";
+
+
+
+
+// █▀ █▀▀ ▀█▀ █░█ █▀█
+// ▄█ ██▄ ░█░ █▄█ █▀▀
+
 void setup() {
   // println(System.getProperty("java.version"));
   // Version 17.x. Pretty modern, we got a lot of cool things to work with >:3
@@ -41,6 +59,10 @@ void setupInternalServices() {
 
 }
 
+
+
+// █▀▄ █▀█ ▄▀█ █░█░█
+// █▄▀ █▀▄ █▀█ ▀▄▀▄▀
 
 void draw() {
 

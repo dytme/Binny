@@ -12,27 +12,29 @@ void actOnDetection(String disposalCategory) {
   switch (disposalCategory) {
 
     case "PLASTIC":  
-    println("Ran Plastic.");
+      println("Ran Plastic.");
+      INFORM_PLASTIC_BIN();
       currentScene = "PLASTIC";
       break;
 
     case "PAPER":
-    println("Ran Paper.");
+      println("Ran Paper.");
       currentScene = "PAPER";
       break;
 
     case "SERVICE_DESK":
-    println("Ran ServiceDesk.");
+      println("Ran ServiceDesk.");
       currentScene = "SERVICE_DESK";
       break;
 
     case "ORGANIC":
-    println("Ran Organic.");
+      println("Ran Organic.");
       currentScene = "ORGANIC";
       break;
     
     default:
       println("Ran Residual.");
+      INFORM_RESIDUAL_BIN();
       currentScene = "RESIDUAL";
       break;
 

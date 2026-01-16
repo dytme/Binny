@@ -84,7 +84,6 @@ CompletableFuture<String> requestDetection(String filePath) {
     }    
 
     // Otherwise, return the detection result.
-    // processingDetection = false;
     return detectionResult;
   })
 
@@ -92,7 +91,6 @@ CompletableFuture<String> requestDetection(String filePath) {
   .exceptionally(exception -> {
     println("Error Body: " + exception);
     SHOW_ERROR("522", exception.toString());
-    // processingDetection = false;
     return "-2";
   });
   

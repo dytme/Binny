@@ -2,9 +2,6 @@
 // █▀█ █▀█ █▀█ █▀▀ █▀▀ █▀ █▀   █▀▀ ▄▀█ █▀▄▀█ █▀▀ █▀█ ▄▀█   █▀▀ █▀▀ █▀▀ █▀▄
 // █▀▀ █▀▄ █▄█ █▄▄ ██▄ ▄█ ▄█   █▄▄ █▀█ █░▀░█ ██▄ █▀▄ █▀█   █▀░ ██▄ ██▄ █▄▀
 
-// If this is set to anything but "", then it will force a fake result (for testing purposes)
-String forcedResult = "";
-
 void processCameraFeed() {
 
 	// // Capture the latest safe image from the camera
@@ -23,7 +20,7 @@ void processCameraFeed() {
 		println("Sending a normal request");
 		// Send a request to the AI and point to the newly saved image.
 
-		requestDetection("esptest.jpg").thenAccept(result -> {
+		requestDetection("capture.jpg").thenAccept(result -> {
 		// Process Result
 		println("Got result of detection.");
 		processModelResult(result);

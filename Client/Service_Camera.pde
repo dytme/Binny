@@ -13,13 +13,6 @@ Handles the input of the Webcam or an External Camera.
 
 
 
-// █▀ █▀▀ ▀█▀ ▀█▀ █ █▄░█ █▀▀ █▀
-// ▄█ ██▄ ░█░ ░█░ █ █░▀█ █▄█ ▄█
-
-String activeCamera = "NONE";
-
-
-
 
 // █▀ █▀▀ ▀█▀ █░█ █▀█
 // ▄█ ██▄ ░█░ █▄█ █▀▀
@@ -53,6 +46,6 @@ void cameraFeed() {
       
     // Draw the latest valid image taken from whatever camera we have enabled right now.
     rectMode(CENTER);
-    println(lastValidCameraFeed);
+    // println(lastValidCameraFeed);
     if (lastValidCameraFeed != null) image(lastValidCameraFeed, width/2 - 320, height/2 - 240, 640, 480);
 }

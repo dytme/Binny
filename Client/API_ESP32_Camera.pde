@@ -1,3 +1,4 @@
+
 // █▀ █▀▀ ▀█▀ ▀█▀ █ █▄░█ █▀▀ █▀
 // ▄█ ██▄ ░█░ ░█░ █ █░▀█ █▄█ ▄█
 
@@ -12,7 +13,7 @@ void captureESPFeed() {
     if (pic != null && pic.length > 0) {  
         saveBytes("data/capture.jpg", pic);
         lastValidCameraFeed = loadImage("capture.jpg");
-        println("Picture taken and saved as 'capture.jpg' (" + pic.length + " bytes)");
+        // println("Picture taken and saved as 'capture.jpg' (" + pic.length + " bytes)");
     } else { 
         println("Picture failed (null/0 bytes");
         // SHOW_ERROR("404", "Camera stream not found or invalidated.");

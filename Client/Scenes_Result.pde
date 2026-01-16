@@ -15,14 +15,6 @@ Scenes that render based on the model's detection result.
 
 
 
-// █▀ █▀▀ ▀█▀ ▀█▀ █ █▄░█ █▀▀ █▀
-// ▄█ ██▄ ░█░ ░█░ █ █░▀█ █▄█ ▄█
-
-int splashScreenDuration = 7000;
-
-
-
-
 
 //█▀ █░█ ▄▀█ █▀█ █▀▀ █▀▄   ▄▀█ █▀ █▀ █▀▀ ▀█▀ █▀
 //▄█ █▀█ █▀█ █▀▄ ██▄ █▄▀   █▀█ ▄█ ▄█ ██▄ ░█░ ▄█
