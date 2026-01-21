@@ -49,10 +49,10 @@ enum BinType {
 
 // Print out the current active serial connections and setup connections for both.
 void serialSetup() {
-	// println(Serial.list());
+	println(Serial.list());
 
-	String portBin1 = Serial.list()[2]; //com #
-	String portBin2 = Serial.list()[3]; //com #
+	String portBin1 = Serial.list()[0]; //com #
+	String portBin2 = Serial.list()[1]; //com #
 
 	bin1 = new Serial(this, portBin1, baudrate);
 	bin2 = new Serial(this, portBin2, baudrate);
@@ -82,6 +82,8 @@ void INFORM_PLASTIC_BIN() {
 	// If Serial Connections are disabled, do nothing.
 	if (!serialConnections) return;
 
+	println("Informing Plastic Bin Arduino on Line 2");
+
 	bin2.write('H');
 	expectedBin = BinType.PLASTIC;
 	waitingThrow = true;
@@ -97,7 +99,7 @@ void INFORM_PLASTIC_BIN() {
 void serialEvent(Serial which) {
 
 	println("Serial Data Event");
-	println(which);
+	// println(which);
 
 	String read = which.readStringUntil('\n'); //read the characters from THIS serial port until end of line
 	if ( read == null) return ;
@@ -105,22 +107,29 @@ void serialEvent(Serial which) {
 
 	println(read);
 
-	// Why are we disregarding "1"?
-	if (!read.equals("1")) return;
-
 
 	BinType actualBin;
 	if (which == bin1) actualBin = BinType.RESIDUAL; // Graph used to be updated here.
 	else actualBin = BinType.PLASTIC;
 
-	if (waitingThrow) { // If we're waiting on input from the last throw.
+	if (read.length() > 1) { // If the response on serial is larger than 1, then it's reporting the fullness.
+		String newFullnessValue = read.substring(1, read.length());
+		println("New fullness value stored for " + actualBin.name() + " bin: " + newFullnessValue);
+		updateBinFullness(actualBin.name(), newFullnessValue);
+	} else {
+		if (waitingThrow) { // If we're waiting on input from the last throw.
 						// i.e. if Binny has been used in this particular disposal event
 						// Once the splash screen is over, waitingThrow will be set to false.
+		
+		println("Binny influenced this disposal!");
 
 		// Track the disposal, mentioning the use and result of Binny
-		trackDisposal(compressBinName(actualBin), compressBinName(expectedBin)); // TODO: Only store the first letter of the bin name to save on storage space.
+		trackDisposal(actualBin, expectedBin); // TODO: Only store the first letter of the bin name to save on storage space.
 		waitingThrow = false;
 
-	} else { trackDisposal(actualBin.name(), null); } // If Binny wasn't used, just track whatever item was thrown out.
+	} else { trackDisposal(actualBin, null); } // If Binny wasn't used, just track whatever item was thrown out.
+	}
+
+	
 }
 

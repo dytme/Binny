@@ -3,14 +3,14 @@
 // █▄▀ █▀█ ░█░ █▀█   ██▄ █░▀█ ░█░ █▀▄ █ ██▄ ▄█
 
 
-void trackDisposal(String TARGET_BIN, String DETECTED_BIN) {
+void trackDisposal(BinType TARGET_BIN, BinType DETECTED_BIN) {
   
   // Creae a new entry in the CSV file
   TableRow newRow = addTableRow(disposalsTracker);
-  newRow.setString("TARGET_BIN", TARGET_BIN); // Track in what bin an item was thrown
+  newRow.setString("TARGET_BIN", compressBinName(TARGET_BIN)); // Track in what bin an item was thrown
   
   if (DETECTED_BIN != null) { // If Binny was used, also track that it was and what it recommended.
-    newRow.setString("DETECTED_BIN", DETECTED_BIN);
+    newRow.setString("DETECTED_BIN", compressBinName(DETECTED_BIN));
   } // else newRow.setString("BINNY_USED", "N"); By default, if there's no active
   
   // Save the updated table to a file
@@ -19,33 +19,36 @@ void trackDisposal(String TARGET_BIN, String DETECTED_BIN) {
 }
 
 
-void trackFullness(String RESIDUAL_BIN, String PLASTIC_BIN) {
+
+
+// RESIDUAL  PLASTIC  PAPER  ORGANIC
+String[] binFullness = new String[4];
+
+void trackFullness() {
   
   // Creae a new entry in the CSV file
   TableRow newRow = addTableRow(fullnessTracker);
-  
-  newRow.setString("RESIDUAL_BIN", RESIDUAL_BIN);
-  newRow.setString("PLASTIC_BIN", PLASTIC_BIN);
+
+  newRow.setString("RESIDUAL_BIN", binFullness[0]);
+  newRow.setString("PLASTIC_BIN", binFullness[1]);
   
   // Save the updated table to a file
   saveFullnessTrackerTable();
+
 }
 
 
-// void countItemBeingThrown(int actualBin, int expectedBin) {
-	
-// 	// If the index is accidentally bigger than the number of connected bins, do nothing.
-// 	if (actualBin > numberOfBins-1 || expectedBin > numberOfBins-1) { 
-// 		SHOW_ERROR("404", "Indexed bin in data collection method not found.");
-// 		return;
-// 	}
 
-// 	// Increase the total disposal count for that bin
-// 	totalDisposals[actualBin] = totalDisposals[actualBin] + 1;
-	
-// 	// Check if the item was thrown correctly, and if so, count for that too
-// 	if (actualBin == expectedBin) {
-// 		matchedDisposals[actualBin] = matchedDisposals[actualBin] + 1;
-// 	}
+void updateBinFullness(String BIN_TYPE, String VALUE) {
 
-// }
+  int fullnessArrayIndex = 0;
+
+  switch(BIN_TYPE) {
+    case "PLASTIC_BIN": fullnessArrayIndex = 1; break;
+    case "PAPER_BIN": fullnessArrayIndex = 2; break;
+    case "ORGANIC_BIN": fullnessArrayIndex = 3; break;
+  }
+
+  binFullness[fullnessArrayIndex] = VALUE;
+
+}

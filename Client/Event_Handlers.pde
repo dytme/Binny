@@ -33,17 +33,18 @@ void processCameraFeed() {
 
 }
 
-void mousePressed() {
+void triggerBinny() {
 
-	// If the program is not currently in "Seek Object" mode, then do nothing.
-	println("Mouse pressed");
-
-	if (currentScene != "DEFAULT") return;
-	if (processingDetection) return;
-
-	// Process the camera feed through the AI model.
-	processCameraFeed();
-	// Returning to normal functioning (default / seeking objects) is done through processCameraFeed();
+	if (currentScene == "DEFAULT") { // If we're currently in seeking/default mode, trigger the AI based on the viewport
+		if (processingDetection) return;
+	
+		// Process the camera feed through the AI model.
+		processCameraFeed();
+		// Returning to normal functioning (default / seeking objects) is done through processCameraFeed();
+	} else { // Otherwise, tell the program to cut short the splash screen and go back to default/seek mode.
+		currentScene = "DEFAULT";
+		sceneLoaded = false;
+	}
 
 }
 
@@ -53,9 +54,11 @@ void mousePressed() {
 // █▄▀ ██▄ ▀▄▀ ██▄ █▄▄ █▄█ █▀▀ ██▄ █▀▄   █░▀░█ █▄█ █▄▀ ██▄
 
 void keyPressed() {
+
 	switch(key) {
 		case 'm': SCENE_MAINTENANCE(); break;
 		case 'h': SCENE_DEFAULT(); break;
+		case ' ': triggerBinny(); break;
 		default: break;
 	}
 }

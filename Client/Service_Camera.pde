@@ -47,5 +47,5 @@ void cameraFeed() {
     // Draw the latest valid image taken from whatever camera we have enabled right now.
     rectMode(CENTER);
     // println(lastValidCameraFeed);
-    if (lastValidCameraFeed != null) image(lastValidCameraFeed, width/2 - 320, height/2 - 240, 640, 480);
+    if (lastValidCameraFeed != null) image(lastValidCameraFeed, width/2 - camViewportX/2, height/2 - camViewportY/2, camViewportX, camViewportY);
 }

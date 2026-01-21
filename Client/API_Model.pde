@@ -121,8 +121,6 @@ void processModelResult(String result) {
   if (intResult > 0 && intResult < 59) { // If the model detected something, then it will always return an integer between 0 and 59.
     objectName = nameMap.getString(result);
     disposalCategory = binMap.getString(result);
-  } else if (intResult == -1) { // If the model detected nothing, then it returns -1.
-    objectName = "None Detected";
   }
   
   // Output result(s)

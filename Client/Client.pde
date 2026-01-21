@@ -21,14 +21,18 @@ Software Created by @d_ytme (Sammy)
 // ▄█ ██▄ ░█░ ░█░ █ █░▀█ █▄█ ▄█
 
 String activeCamera = "NONE";
-boolean serialConnections = false;
+boolean serialConnections = true;
 
-int splashScreenFrameCount = 2*10; // Program runs at 60 FPS. So #*60 seconds.
-                                   // We're using frameCount for delays instead of milliseconds because the program is technically supposed to run for weeks on end.
-                                   // Miliseconds would overflow at around the 25th day mark, while frameCount can last for much, much longer. (over a year)
+int splashScreenFrameCount = 8*10; // Program runs at 10 FPS. So #*10 seconds.
+                                     // We're using frameCount for delays instead of milliseconds because the program is technically supposed to run for weeks on end.
+                                     // Miliseconds would overflow at around the 25th day mark, while frameCount can last for much, much longer. (over a year)
+int dbUpdateTreshold = 60*10; // After how many frames will the fullness tracker update the file?
 
 // If this is set to anything but "", then it will force a fake result (for testing purposes)
-String forcedResult = "14";
+String forcedResult = "-1";
+
+int camViewportX = 640;
+int camViewportY = 480;
 
 
 
@@ -79,12 +83,18 @@ void setupInternalServices() {
 // █▀▄ █▀█ ▄▀█ █░█░█
 // █▄▀ █▀▄ █▀█ ▀▄▀▄▀
 
+int lastDBUpdFrameCount = 0;
 void draw() {
 
   updateGlobalClock(); // Update and keep track of the global clock (for scheduled tasks)
   updateCurrentScene(); // Update the scene currently being rendered on screen.
 
-  println(frameRate);
+  // Every 10 minutes or so, store the latest fullness values to the database
+  if (frameCount - lastDBUpdFrameCount > dbUpdateTreshold) {
+    lastDBUpdFrameCount = frameCount;
+    println("Tracking fullness");
+    trackFullness();
+  }
   
 }
 

@@ -39,7 +39,6 @@ TableRow addTableRow(Table table) {
   
   // Create a new row within the target table.
   TableRow newRow = table.addRow();
-  newRow.setInt("ID", table.getRowCount() -1);
   
   updateCurrentTime();
   newRow.setString("TIME", formatCurrentTime(currentTime));
@@ -61,5 +60,5 @@ void saveFullnessTrackerTable() {
 
 // Compress Bin Names to Single Letter
 String compressBinName(BinType binType) {
-  return binType.name().substring(1);
+  return binType.name().substring(0,1);
 }

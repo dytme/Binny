@@ -34,6 +34,11 @@ void actOnDetection(String disposalCategory) {
       println("Ran Organic.");
       currentScene = "ORGANIC";
       break;
+
+    case "N/A": 
+      println("Ran No Detection");
+      currentScene = "NO_DETECTION";
+      break;
     
     default:
       println("Ran Residual.");

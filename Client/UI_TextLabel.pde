@@ -3,6 +3,7 @@ class ShadowText {
   float xPos, yPos, xSize, ySize;
   float textSize = 48;
   PFont textFont;
+  color textColor = #FFFFFF;
   
   float shadowOffset = 3;
   
@@ -20,10 +21,12 @@ class ShadowText {
   }
   
   void setTextFont(PFont f) { textFont = f; }
+
+  void setTextColor(color c) { textColor = c; }
   
   void render() {
     if (textFont != null) textFont(textFont);
-    if (textSize > 0) textSize(this.textSize); println(this.content + ": " + this.textSize);
+    if (textSize > 0) textSize(this.textSize);
     
     // println(content + ": " + xPos + " / " + yPos + " / " + xSize  + " / " + ySize);
     
@@ -35,7 +38,7 @@ class ShadowText {
     // fill(#44000000);
     //text(content, xPos+shadowOffset, yPos+shadowOffset, xSize, ySize);
     // Actual Text
-    fill(#FFFFFF);
+    fill(textColor);
     text(content, xPos, yPos, xSize, ySize);
   }
 }

@@ -91,6 +91,7 @@ void updateCurrentScene() {
     case "PLASTIC": RESULT_PLASTIC(); break;
     case "PAPER": RESULT_PAPER(); break;
     case "RESIDUAL": RESULT_RESIDUAL(); break;
+    case "NO_DETECTION": RESULT_NO_DETECTION(); break;
     case "MAINTENANCE": SCENE_MAINTENANCE(); break;
     case "ERROR": SHOW_ERROR(null, null); break;
     case "ANALYZE": SCENE_ANALYZE(); break;

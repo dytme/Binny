@@ -13,9 +13,6 @@ Scenes that render based on the model's detection result.
 */
 
 
-int splashScreenDuration = 100;
-
-
 //█▀ █░█ ▄▀█ █▀█ █▀▀ █▀▄   ▄▀█ █▀ █▀ █▀▀ ▀█▀ █▀
 //▄█ █▀█ █▀█ █▀▄ ██▄ █▄▀   █▀█ ▄█ ▄█ ██▄ ░█░ ▄█
 
@@ -111,11 +108,12 @@ void clearScene() {
 
 void isClearAllowed() {
 
-    println(frameCount - resultAppearFrame);
-    println(splashScreenFrameCount);
+    // println(frameCount - resultAppearFrame);
+    // println(splashScreenFrameCount);
 
     // If more frames have passed since the screen has appeared than the desired duration, 
-    if (frameCount - resultAppearFrame >= splashScreenFrameCount) { 
+        // OR if the program has had it's scene loaded variable set to false.
+    if (frameCount - resultAppearFrame >= splashScreenFrameCount || sceneLoaded == false) { 
         clearScene();
     }
 
@@ -153,7 +151,7 @@ void RESULT_ORGANIC() {
     factLabel.content = 
         "Did you know: The University will (most likely) use\n" +
         "what you're about to throw out as Biofuel to heat the buildings on campus?";
-    renderSharedResultsAssets("MY GUESS IS");
+    renderSharedResultsAssets("THROW ME IN");
 
 
     // Check if it's time to clear the scene on the next iteration
@@ -186,7 +184,7 @@ void RESULT_PLASTIC() {
         factLabel.content =
         "You may throw this item into the ORANGE bin,\n" +
         "as long as it is not dirty or contaminated with food.";
-    renderSharedResultsAssets("THROW ME IN...");
+    renderSharedResultsAssets("THROW ME IN");
 
 
     // Check if it's time to clear the scene on the next iteration
@@ -220,7 +218,7 @@ void RESULT_PAPER() {
     factLabel.content =
         "You may throw this item into the BLUE bin,\n" +
         "as long as it is not dirty or contaminated with food.";
-    renderSharedResultsAssets("THROW ME IN...");
+    renderSharedResultsAssets("THROW ME IN");
 
 
     // Check if it's time to clear the scene on the next iteration
@@ -250,7 +248,7 @@ void RESULT_RESIDUAL() {
     factLabel.content = 
         "Unfortunately, there's a chance that this item is not recyclable." +
         "When in doubt, it's better to be safe than to contaminate a recycling plant.";
-    renderSharedResultsAssets("THROW ME IN...");
+    renderSharedResultsAssets("THROW ME IN");
 
 
     // Check if it's time to clear the scene on the next iteration
@@ -280,7 +278,7 @@ void RESULT_SERVICE_DESK() {
     factLabel.content = 
         "This item cannot be disposed of in a regular waste bin.\n" +
         "Please go to the nearest Service Desk (Hal 2B) in order to dispose of it properly.";
-    renderSharedResultsAssets("MY GUESS IS");
+    renderSharedResultsAssets("THROW ME IN");
 
 
     // Check if it's time to clear the scene on the next iteration
@@ -288,7 +286,34 @@ void RESULT_SERVICE_DESK() {
 
 }
 
+void RESULT_NO_DETECTION() {
+    
+    // Mark the global fields required to keep this scene showing.
+    sceneLoaded = true;
+    currentScene = "NO_DETECTION";
 
+
+    // Render the scene itself.
+    color resultColor = #DD0051;
+    background(resultColor);
+    
+    ResultCard organic = new ResultCard("NO OBJECT FOUND", resultColor, "result_icons/ERROR.png");
+    organic.xSize = width;
+    organic.ySize = height;
+    organic.render();
+
+
+    // Render the explicit output
+    factLabel.content = 
+        "I didn't find any object in my viewport.\n" +
+        "Lay the object flat, position it within the red perimeter and try again!";
+    renderSharedResultsAssets("ERROR");
+
+
+    // Check if it's time to clear the scene on the next iteration
+    isClearAllowed();
+
+}
 
 
 

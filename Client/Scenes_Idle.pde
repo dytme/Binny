@@ -82,11 +82,29 @@ void SCENE_DEFAULT() {
   // Draw Binny Logo
   binnyLogo("");
 
-  factLabel.yPos = height*4/5;
+  factLabel.yPos = height*5/6;
   renderFunFact(false);
 
   // Draw ViewPort
   cameraFeed();
+
+  // Draw the indicators that help users line up their objects with binny
+  noStroke();
+  fill(#44FF9999);
+  rectMode(CENTER);
+  rect(width/2, height/2, 100, 3);
+  rect(width/2, height/2, 3, 100);
+
+  stroke(#44FF9999);
+  strokeWeight(3);
+  noFill();
+  rect(width/2, height/2, camViewportX-100, camViewportY-100);
+
+  ShadowText usageInstructions = new ShadowText(("How to use:\nLay flat on the table a SINGLE object and line it up with Binny's viewport, then press SPACEBAR."), 0, height / 2 + camViewportY/2 * 1.2, width, 48);
+  usageInstructions.setTextSize(20);
+  usageInstructions.setTextFont(robotoMono48);
+  usageInstructions.setTextColor(#FF9999);
+  usageInstructions.render();
 
   
   // fill(#C9C9C9);

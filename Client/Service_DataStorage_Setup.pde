@@ -17,6 +17,9 @@ void dataStorageSetup() {
   // If one or more of the tables don't exist for today's date, then create some!
   if (disposalsTracker == null) createDisposalsTrackerTable();
   if (fullnessTracker == null) createFullnessTrackerTable();
+
+  // Load the previous fullness values into memory
+  loadPreviousFullnessValues();
 }
 
 
@@ -32,7 +35,6 @@ void createDisposalsTrackerTable() {
   disposalsTracker = new Table();
   
   // Create collumns for stored data
-  disposalsTracker.addColumn("ID");
   disposalsTracker.addColumn("TIME");
   disposalsTracker.addColumn("TARGET_BIN");
   disposalsTracker.addColumn("DETECTED_BIN");
@@ -49,7 +51,6 @@ void createFullnessTrackerTable() {
   fullnessTracker = new Table();
   
   // Create collumns for stored data
-  fullnessTracker.addColumn("ID");
   fullnessTracker.addColumn("TIME");
   fullnessTracker.addColumn("RESIDUAL_BIN");
   fullnessTracker.addColumn("PLASTIC_BIN");
@@ -59,3 +60,43 @@ void createFullnessTrackerTable() {
   saveFullnessTrackerTable();
  
 }
+
+
+void loadPreviousFullnessValues() {
+  int lastTableRowIndex = fullnessTracker.getRowCount() - 1;
+  // println(lastTableRowIndex);
+
+  if (lastTableRowIndex > 0) { // If there is a last valid row in the table
+    // Load the data to memory.
+    binFullness[0] = fullnessTracker.getString(lastTableRowIndex, "RESIDUAL_BIN");
+    binFullness[1] = fullnessTracker.getString(lastTableRowIndex, "PLASTIC_BIN");
+  }
+
+  // Check if any of the data in memory is empty, and if so, set it to 0.
+  for ( int i = 0; i < binFullness.length; i++ ) {
+    if (binFullness[i] == null || binFullness[i] == "") binFullness[i] = "0";
+  }
+
+  // println(binFullness);
+
+}
+
+
+// void loadPreviousBinFullness() {
+
+//   int lastTableRow = fullnessTracker.getRowCount();
+//   if (lastTableRow > 0) { // If there is a valid previous row.
+//     TableRow lastRow = fullnessTracker.getRow(lastTableRow);
+//     if (lastRow != null) {
+//       binFullness[0] = fullnessTracker.getString(lastTableRow, "RESIDUAL_BIN");
+//       binFullness[1] = fullnessTracker.getString(lastTableRow, "PLASTIC_BIN");
+//       // COMPLETE HERE WITH PAPER AND ORGANIC
+//     }
+//   }
+
+//   // If no previous data is available, either due to a missing entry or a missing row, set to 0.
+//   for (String value : binFullness) {
+//     println(value);
+//     if (value == "" || value == null) value = "0";
+//   }
+// }
