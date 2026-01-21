@@ -9,6 +9,9 @@ void actOnDetection(String disposalCategory) {
 
   // However, it should be safe to execute Arduino code on a separate CPU thread, as we are not listening for a result from the Microprocessors that would result in a visible change to the interface.
   
+  // Store the frame count at the moment of displaying the result splash screen
+  resultAppearFrame = frameCount;
+  
   switch (disposalCategory) {
 
     case "PLASTIC":  

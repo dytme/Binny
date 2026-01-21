@@ -56,3 +56,10 @@ void saveDisposalsTrackerTable() {
 void saveFullnessTrackerTable() {
   saveTable(fullnessTracker, "data/data_tracking/fullness/" + currentDate + ".csv");
 }
+
+
+
+// Compress Bin Names to Single Letter
+String compressBinName(BinType binType) {
+  return binType.name().substring(1);
+}

@@ -1,7 +1,7 @@
 class ShadowText {
   String content;
   float xPos, yPos, xSize, ySize;
-  float textSize = -1;
+  float textSize = 48;
   PFont textFont;
   
   float shadowOffset = 3;
@@ -15,22 +15,24 @@ class ShadowText {
   }
   
   void setTextSize(float s) {
-    textSize = s;
-    shadowOffset = textSize/12;
+    this.textSize = s;
+    // shadowOffset = textSize/12;
   }
   
   void setTextFont(PFont f) { textFont = f; }
   
   void render() {
     if (textFont != null) textFont(textFont);
-    if (textSize > 0) textSize(textSize);
+    if (textSize > 0) textSize(this.textSize); println(this.content + ": " + this.textSize);
     
     // println(content + ": " + xPos + " / " + yPos + " / " + xSize  + " / " + ySize);
     
     rectMode(CORNER);
-    // Shadow
-    fill(#44000000);
+
     if (content == null) content = ""; // Reset content if it's ever set to null;
+    
+    // Shadow
+    // fill(#44000000);
     //text(content, xPos+shadowOffset, yPos+shadowOffset, xSize, ySize);
     // Actual Text
     fill(#FFFFFF);

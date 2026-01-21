@@ -20,6 +20,12 @@ void dataStorageSetup() {
 }
 
 
+
+// We shortened this file's format.
+//    Before, we had a specific "BINNY_USED" collumn, which stored a yes or no value.
+//    However, we discovered that, by simply not storing anything in the "DETECTED_BIN" collumn if Binny was not used,
+//    we store both the use of Binny and it's answer (as there'll always be one)
+
 void createDisposalsTrackerTable() {
   
   // Create a new Table object
@@ -29,7 +35,6 @@ void createDisposalsTrackerTable() {
   disposalsTracker.addColumn("ID");
   disposalsTracker.addColumn("TIME");
   disposalsTracker.addColumn("TARGET_BIN");
-  disposalsTracker.addColumn("BINNY_USED");
   disposalsTracker.addColumn("DETECTED_BIN");
   
   // Save table named after today's date

@@ -15,7 +15,7 @@ String randomJSONString(JSONObject jsonObj) {
 
 void renderFunFact(boolean force) {
   textAlign(CENTER, TOP);
-  factLabel.setTextSize(height/40);
+  factLabel.setTextSize(height/32);
 
   if ((globalClock) % 400 == 0 || force) {
     factLabel.content = randomJSONString(funFacts);
@@ -129,7 +129,7 @@ void SCENE_MAINTENANCE() {
   organic.render();
 
 
-  renderResultSceneTitle("MAINTENANCE");
+  renderSharedResultsAssets("MAINTENANCE");
 
 
   factLabel.content = "I'm temporarily offline while being worked on.\nPlease check back in later!";

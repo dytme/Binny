@@ -13,7 +13,7 @@ Scenes that render based on the model's detection result.
 */
 
 
-
+int splashScreenDuration = 100;
 
 
 //█▀ █░█ ▄▀█ █▀█ █▀▀ █▀▄   ▄▀█ █▀ █▀ █▀▀ ▀█▀ █▀
@@ -59,7 +59,7 @@ class ResultCard{
 
 }
 
-void renderResultSceneTitle(String title) {
+void renderSharedResultsAssets(String title) {
 
     textAlign(CENTER, TOP);
 
@@ -68,6 +68,12 @@ void renderResultSceneTitle(String title) {
     sceneTitle.setTextSize(height/10);
     sceneTitle.render();
 
+    fill(000000);
+    rect(0, height*4/5-48, width, height);
+
+    factLabel.setTextSize(height/28);
+    factLabel.yPos = height*5/6;
+    factLabel.render();
 
 }
 
@@ -94,8 +100,24 @@ void clearScene() {
     currentScene = "DEFAULT";
 
     renderFunFact(true); // Render a new fun fact to replace the (possible) explicit output in the label.
+    
+    // Stop the code from checking if the result is influenced by Binny's detection or not.
+    waitingThrow = false;
 
     sceneLoaded = false;
+
+}
+
+
+void isClearAllowed() {
+
+    println(frameCount - resultAppearFrame);
+    println(splashScreenFrameCount);
+
+    // If more frames have passed since the screen has appeared than the desired duration, 
+    if (frameCount - resultAppearFrame >= splashScreenFrameCount) { 
+        clearScene();
+    }
 
 }
 
@@ -107,193 +129,166 @@ void clearScene() {
 // █▀▄ ██▄ ▄█ █▄█ █▄▄ ░█░   ▄█ █▄▄ ██▄ █░▀█ ██▄ ▄█
 
 boolean sceneLoaded = false;
+int resultAppearFrame = 0;
 
 
 void RESULT_ORGANIC() {
     
+    // Mark the global fields required to keep this scene showing.
+    sceneLoaded = true;
     currentScene = "ORGANIC";
 
-    if (sceneLoaded) { 
-        delay(splashScreenDuration);
-    } else {
 
-        color resultColor = #AEC036;
-
-        background(resultColor);
-        
-        ResultCard organic = new ResultCard("ORGANIC", resultColor, "result_icons/ORGANIC.png");
-        organic.xSize = width;
-        organic.ySize = height;
-        organic.render();
-
-        renderResultSceneTitle("MY GUESS IS");
-
-        factLabel.yPos = height*4/5;
-        factLabel.content = "Did you know: The University will (most likely) use\nwhat you're about to throw out as Biofuel to heat the buildings on campus?";
-        factLabel.render();
-
-        sceneLoaded = true;
-        return;
+    // Render the scene itself.
+    color resultColor = #AEC036;
+    background(resultColor);
+    
+    ResultCard organic = new ResultCard("ORGANIC", resultColor, "result_icons/ORGANIC.png");
+    organic.xSize = width;
+    organic.ySize = height;
+    organic.render();
 
 
-    }
+    // Render the explicit output
+    factLabel.content = 
+        "Did you know: The University will (most likely) use\n" +
+        "what you're about to throw out as Biofuel to heat the buildings on campus?";
+    renderSharedResultsAssets("MY GUESS IS");
 
-    clearScene();
+
+    // Check if it's time to clear the scene on the next iteration
+    isClearAllowed();
 
 }
+
+
 
 
 void RESULT_PLASTIC() {
-    
+
+    // Mark the global fields required to keep this scene showing.
+    sceneLoaded = true;
     currentScene = "PLASTIC";
 
-    if (sceneLoaded) { 
-        delay(splashScreenDuration);
-    } else {
+    // Render the scene itself
+    color resultColor = #F47920;
+    background(resultColor);
 
-        background(#F47920);
+    // Plastic Card
+    ResultCard plastic = new ResultCard("PLASTIC", resultColor, "result_icons/PLASTIC.png");
+    plastic.xSize = width / 2;
+    plastic.ySize = height;
+    plastic.render();
 
-        // Plastic Card
-        ResultCard plastic = new ResultCard("PLASTIC", #F47920, "result_icons/PLASTIC.png");
-        plastic.xSize = width/2;
-        plastic.ySize = height;
-        plastic.render();
+    renderAlternative(); // Mention that it may be dropped off in Residual as well, depending on the item.
 
-        renderAlternative(); // Mention that it may be dropped off in Residual as well, depending on the item.
-
-        renderResultSceneTitle("MY GUESS IS");
-        
-
-        // Fact Label
-        textFont(robotoMono48);
-
-        factLabel.yPos = height*4/5;
-        factLabel.content = "You may throw this item into the ORANGE bin,\nas long as it is not dirty or contaminated with food.";
-        factLabel.render();
-
-        sceneLoaded = true;
-        return;
+    // Render the explicit output
+        factLabel.content =
+        "You may throw this item into the ORANGE bin,\n" +
+        "as long as it is not dirty or contaminated with food.";
+    renderSharedResultsAssets("THROW ME IN...");
 
 
-    }
-
-    clearScene();
-
+    // Check if it's time to clear the scene on the next iteration
+    isClearAllowed();
 }
+
 
 
 void RESULT_PAPER() {
     
+    // Mark the global fields required to keep this scene showing.
+    sceneLoaded = true;
     currentScene = "PAPER";
 
-    if (sceneLoaded) { 
-        delay(splashScreenDuration);
-    } else {
 
-        background(#F47920);
-
-        // Plastic Card
-        ResultCard paper = new ResultCard("PAPER", #0080C6, "result_icons/PAPER.png");
-        paper.xSize = width/2;
-        paper.ySize = height;
-        paper.render();
-
-        renderAlternative(); // Mention that it may be dropped off in Residual as well, depending on the item.
+    // Render the scene itself
+    color resultColor = #0080C6;
+    background(resultColor);
 
 
-        renderResultSceneTitle("MY GUESS IS");
-        
+    // Paper Card
+    ResultCard paper = new ResultCard("PAPER", resultColor, "result_icons/PAPER.png");
+    paper.xSize = width/2;
+    paper.ySize = height;
+    paper.render();
 
-        // Fact Label
-        textFont(robotoMono48);
-
-        factLabel.yPos = height*4/5;
-        factLabel.content = "You may throw this item into the BLUE bin,\nas long as it is not dirty or contaminated with food.";
-        factLabel.render();
-
-        sceneLoaded = true;
-        return;
+    renderAlternative(); // Mention that it may be dropped off in Residual as well, depending on the item.
 
 
-    }
+    // Render the explicit output
+    factLabel.content =
+        "You may throw this item into the BLUE bin,\n" +
+        "as long as it is not dirty or contaminated with food.";
+    renderSharedResultsAssets("THROW ME IN...");
 
-    clearScene();
+
+    // Check if it's time to clear the scene on the next iteration
+    isClearAllowed();
 
 }
 
 
 void RESULT_RESIDUAL() {
     
+    // Mark the global fields required to keep this scene showing.
+    sceneLoaded = true;
     currentScene = "RESIDUAL";
 
-    println("Residual Waste Scene Loaded In.");
 
-    if (sceneLoaded) { 
-        println("Applying Delay for the result to be properly shown.");
-        delay(splashScreenDuration);
-    } else {
-
-        println("Applying visual state of the scene");
-        color resultColor = #9D9999;
-        
-        background(resultColor);
-        
-        ResultCard organic = new ResultCard("RESIDUAL WASTE", resultColor, "result_icons/RESIDUAL.png");
-        organic.xSize = width;
-        organic.ySize = height;
-        organic.render();
+    // Render the scene itself.
+    color resultColor = #9D9999;
+    background(resultColor);
+    
+    ResultCard organic = new ResultCard("RESIDUAL WASTE", resultColor, "result_icons/RESIDUAL.png");
+    organic.xSize = width;
+    organic.ySize = height;
+    organic.render();
 
 
-        renderResultSceneTitle("MY GUESS IS");
-        
-        factLabel.yPos = height*4/5;
-        factLabel.content = "Unfortunately, there's a chance that this item is not recyclable.\nWhen in doubt, it's better to be safe than to contaminate a recycling plant.";
-        factLabel.render();
-
-        println("Stating that the scene was loaded in properly");
-
-        sceneLoaded = true;
-        return;
+    // Render the explicit output
+    factLabel.content = 
+        "Unfortunately, there's a chance that this item is not recyclable." +
+        "When in doubt, it's better to be safe than to contaminate a recycling plant.";
+    renderSharedResultsAssets("THROW ME IN...");
 
 
-    }
-
-    clearScene();
+    // Check if it's time to clear the scene on the next iteration
+    isClearAllowed();
 
 }
 
 
 void RESULT_SERVICE_DESK() {
     
+    // Mark the global fields required to keep this scene showing.
+    sceneLoaded = true;
     currentScene = "SERVICE_DESK";
 
-    if (sceneLoaded) { 
-        delay(splashScreenDuration);
-    } else {
 
-        background(#AEC036);
-        
-        ResultCard organic = new ResultCard("SERVICE DESK", #E62081, "result_icons/OTHER.png");
-        organic.xSize = width;
-        organic.ySize = height;
-        organic.render();
-
-
-        renderResultSceneTitle("MY GUESS IS");
-        
-        factLabel.yPos = height*4/5;
-        factLabel.content = "This item cannot be disposed of in a regular waste bin.\nPlease go to the nearest Service Desk (Hal 2B) in order to dispose of it properly.";
-        factLabel.render();
-
-        sceneLoaded = true;
-        return;
+    // Render the scene itself.
+    color resultColor = #E62081;
+    background(resultColor);
+    
+    ResultCard organic = new ResultCard("SERVICE DESK", resultColor, "result_icons/OTHER.png");
+    organic.xSize = width;
+    organic.ySize = height;
+    organic.render();
 
 
-    }
+    // Render the explicit output
+    factLabel.content = 
+        "This item cannot be disposed of in a regular waste bin.\n" +
+        "Please go to the nearest Service Desk (Hal 2B) in order to dispose of it properly.";
+    renderSharedResultsAssets("MY GUESS IS");
 
-    clearScene();
+
+    // Check if it's time to clear the scene on the next iteration
+    isClearAllowed();
 
 }
+
+
 
 
 
@@ -304,37 +299,33 @@ void RESULT_SERVICE_DESK() {
 
 void SHOW_ERROR(String errorCode, String errorMessage) {
     
+    // Mark the global fields required to keep this scene showing.
+    sceneLoaded = true;
     currentScene = "ERROR";
 
-    if (sceneLoaded) { 
-        delay(splashScreenDuration);
-    } else {
 
-        background(#DD0051);
-        
-        // Set the Error Code
-        if (errorCode == null) errorCode = "FATAL";
-        else errorCode = ("CODE " + errorCode);
+    // Render the scene itself.
+    color resultColor = #DD0051;
+    background(resultColor);
+    
+    if (errorCode == null) errorCode = "FATAL";
+    else errorCode = ("CODE " + errorCode);
 
-        ResultCard organic = new ResultCard(errorCode, #DD0051, "result_icons/ERROR.png");
-        organic.xSize = width;
-        organic.ySize = height;
-        organic.render();
+    ResultCard error = new ResultCard(errorCode, resultColor, "result_icons/ERROR.png");
+    error.xSize = width;
+    error.ySize = height;
+    error.render();
 
 
-        renderResultSceneTitle("ERROR");
-        
-        factLabel.yPos = height*4/5;
-        factLabel.content = "Unknown Error Occoured.\nIf this issue persists, please contact my administrators.";
-        if (errorMessage != null) factLabel.content = errorMessage;
-        factLabel.render();
-
-        sceneLoaded = true;
-        return;
+    // Render the explicit output
+    factLabel.content = 
+        "Unknown Error Occoured.\n" +
+        "If this issue persists, please contact my administrators.";
+    if (errorMessage != null) factLabel.content = errorMessage;
+    renderSharedResultsAssets("ERROR");
 
 
-    }
-
-    clearScene();
+    // Check if it's time to clear the scene on the next iteration
+    isClearAllowed();
 
 }

@@ -31,8 +31,6 @@ void settings() {
 }
 
 void setupWindow() {
-  frameRate(60);
-  
   // Load in icon before other assets.
   binnyIcon = loadImage("branding/icon_320x.png");
   
@@ -64,7 +62,6 @@ void setupInterface() {
   // Load in fun fact label (keeps user entertained)
   factLabel = new ShadowText("Loading fun facts to keep you entertained.", width/10, height*4/5, width*8/10, height/4);
   factLabel.setTextFont(robotoMono48);
-  factLabel.setTextSize(height/40);
 
 }
 
