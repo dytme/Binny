@@ -51,8 +51,8 @@ enum BinType {
 void serialSetup() {
 	println(Serial.list());
 
-	String portBin1 = Serial.list()[0]; //com #
-	String portBin2 = Serial.list()[1]; //com #
+	String portBin1 = Serial.list()[1]; //com #
+	String portBin2 = Serial.list()[2]; //com #
 
 	bin1 = new Serial(this, portBin1, baudrate);
 	bin2 = new Serial(this, portBin2, baudrate);
@@ -98,14 +98,14 @@ void INFORM_PLASTIC_BIN() {
 // This one doesn't need to check for serialConnections, as it will inherently never fire without one.
 void serialEvent(Serial which) {
 
-	println("Serial Data Event");
+	// println("Serial Data Event");
 	// println(which);
 
 	String read = which.readStringUntil('\n'); //read the characters from THIS serial port until end of line
 	if ( read == null) return ;
 	read = trim(read);
 
-	println(read);
+	// println(read);
 
 
 	BinType actualBin;

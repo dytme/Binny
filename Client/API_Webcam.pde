@@ -22,5 +22,6 @@ void captureWebcamFeed() {
     if (video.available()) {
         video.read();
         lastValidCameraFeed = video;
+        lastValidCameraFeed.save("data/capture.jpg");
     } 
 }
