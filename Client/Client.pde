@@ -20,7 +20,7 @@ Software Created by @d_ytme (Sammy)
 // █▀ █▀▀ ▀█▀ ▀█▀ █ █▄░█ █▀▀ █▀
 // ▄█ ██▄ ░█░ ░█░ █ █░▀█ █▄█ ▄█
 
-String activeCamera = "WEBCAM";
+String activeCamera = "ESP32";
 boolean serialConnections = true;
 
 int splashScreenFrameCount = 8*10; // Program runs at 10 FPS. So #*10 seconds.

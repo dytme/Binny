@@ -51,8 +51,8 @@ enum BinType {
 void serialSetup() {
 	println(Serial.list());
 
-	String portBin1 = Serial.list()[1]; //com #
-	String portBin2 = Serial.list()[2]; //com #
+	String portBin1 = Serial.list()[0]; //com #
+	String portBin2 = Serial.list()[1]; //com #
 
 	bin1 = new Serial(this, portBin1, baudrate);
 	bin2 = new Serial(this, portBin2, baudrate);
@@ -96,6 +96,7 @@ void INFORM_PLASTIC_BIN() {
 // █▄▄ █ ▄█ ░█░ ██▄ █░▀█   █▀░ █▄█ █▀▄   █▀█ █▀▄ █▄▀ █▄█ █ █░▀█ █▄█   █▀▄ ██▄ ▄█ █▀▀ █▄█ █░▀█ ▄█ ██▄
 
 // This one doesn't need to check for serialConnections, as it will inherently never fire without one.
+long lastDisposal = 0;
 void serialEvent(Serial which) {
 
 	// println("Serial Data Event");
@@ -127,7 +128,10 @@ void serialEvent(Serial which) {
 		trackDisposal(actualBin, expectedBin); // TODO: Only store the first letter of the bin name to save on storage space.
 		waitingThrow = false;
 
-	} else { trackDisposal(actualBin, null); } // If Binny wasn't used, just track whatever item was thrown out.
+	} else if (millis() - lastDisposal > 500) {
+		lastDisposal = millis(); 
+		trackDisposal(actualBin, null); 
+	} // If Binny wasn't used, just track whatever item was thrown out.
 	}
 
 	

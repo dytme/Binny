@@ -2,7 +2,7 @@
 // █▀ █▀▀ ▀█▀ ▀█▀ █ █▄░█ █▀▀ █▀
 // ▄█ ██▄ ░█░ ░█░ █ █░▀█ █▄█ ▄█
 
-String camIP = "10.160.37.57";
+String camIP = "10.245.239.57";
 String picURL = "http://" + camIP + "/capture";
 
 void captureESPFeed() {
