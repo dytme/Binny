@@ -1,18 +1,21 @@
 // Uses the Adafruit NeoPixel library by Adafruit Industries (LGPL-3.0)
 
 #include <Adafruit_NeoPixel.h>`
-#include <Wire.h> 
+#include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
-#define trigPin A0 //Sensor Trig pin connected to Arduino pin A0
-#define echoPin A1 //Sensor Echo pin connected to Arduino pin A1
+#define trigPin A0  //Sensor Trig pin connected to Arduino pin A0
+#define echoPin A1  //Sensor Echo pin connected to Arduino pin A1
 
 long distanceInch;
-const int EMPTY_DIST = 40;   // cm
-const int FULL_DIST  = 5;   // cm
+const int EMPTY_DIST = 17;  // cm
+const int FULL_DIST = 5;    // cm
 int fullness;
-
+unsigned long lastDistanceUpdate = 0;
+const unsigned long distanceInterval = 400;
+unsigned long lastFullnessUpdate = 0;
+const unsigned long fullnessInterval = 10000;
 
 #define PIN 6
 #define NUM_LEDS 35
@@ -25,7 +28,7 @@ unsigned long lastUpdate = 0;  // timestamp
 bool fading = false;           // are we currently fading?
 bool holding = false;          //the hold state of the lights before they turn off
 int holdingTime = 5000;        //time it takes for the lights to turn off
-int fadeSpeed = 20;             //the speed of the fade
+int fadeSpeed = 2;             //the speed of the fade
 
 int incomingByte;
 bool blocked = false;
@@ -34,29 +37,31 @@ bool blocked = false;
 void setup() {
   Serial.begin(9600);
   pinMode(beam, INPUT_PULLUP);
-  pinMode(12, HIGH);
+  pinMode(4, INPUT_PULLUP);
   strip.begin();
   strip.show();
-   pinMode(trigPin, OUTPUT);
+  pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
+
+
 
   lcd.init();
   lcd.backlight();
   lcd.clear();
-  lcd.setCursor(0,0);
+  lcd.setCursor(0, 0);
   lcd.print("Binny loading...");
   delay(2000);
 
   lcd.clear();
-  lcd.setCursor(0,0);  //Set LCD cursor to upper left corner, column 0, row 0
-  lcd.print("Distance:");//Print Message on First Row
-  lcd.setCursor(0,1);
+  lcd.setCursor(0, 0);     //Set LCD cursor to upper left corner, column 0, row 0
+  lcd.print("Distance:");  //Print Message on First Row
+  lcd.setCursor(0, 1);
   lcd.print("Fulness:");
 }
 
-
-
 void loop() {
+  //LEDs
+
 
   if (Serial.available() > 0) {
     char n = Serial.read();
@@ -91,52 +96,60 @@ void loop() {
     }
   }
 
-
-  int beamSignal = digitalRead(5);
-  if (beamSignal == 1) {
+  //IR beam sensor
+  int beamSignal = digitalRead(beam);
+  int beam2 = digitalRead(4);
+  if (beamSignal == 1 || beam2 == 1) {
     blocked = true;
-  } else if (beamSignal == 0 && blocked == true) {  //basically check if the same item is still blocking or has already pass so count the item only once and doesnt require delay to properly detect second object
+  } else if ((beamSignal == 0 && beam2 == 0) && blocked == true) {  //basically check if the same item is still blocking or has already pass so count the item only once and doesnt require delay to properly detect second object
     blocked = false;
     Serial.println("1");
   }
-   long duration, distance;
+  //Serial.println(digitalRead(5));
 
-  digitalWrite(trigPin, LOW);
-  
-  delayMicroseconds(2);
+  //ultrasonic and lcd
+  if (millis() - lastDistanceUpdate >= distanceInterval) {
+    lastDistanceUpdate = millis();
+    long duration, distance;
 
-  digitalWrite(trigPin, HIGH);
-  
-  delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
 
-  digitalWrite(trigPin, LOW);
+    //delayMicroseconds(2);
 
-  duration = pulseIn(echoPin, HIGH, 3000);
-  distance = (duration/2) / 29.1;
-  distanceInch = duration*0.0133/2;
+    digitalWrite(trigPin, HIGH);
 
- if (distance >= EMPTY_DIST) {
-    fullness = 0;
+    //delayMicroseconds(10);
+
+    digitalWrite(trigPin, LOW);
+
+    duration = pulseIn(echoPin, HIGH, 20000);
+    distance = (duration / 2) / 29.1;
+    distanceInch = duration * 0.0133 / 2;
+
+    if (distance >= EMPTY_DIST) {
+      fullness = 0;
+    } else if (distance <= FULL_DIST) {
+      fullness = 100;
+    } else {
+      fullness = map(distance, EMPTY_DIST, FULL_DIST, 0, 100);
+    }
+    
+
+    if (millis() - lastFullnessUpdate >= fullnessInterval) {
+      lastFullnessUpdate = millis();
+      Serial.print("F");
+      Serial.println(fullness);
+    }
+
+    lcd.setCursor(9, 0);
+    lcd.print("                         ");
+    lcd.setCursor(9, 0);
+    lcd.print(distance);  //Print measured distance
+    lcd.print(" cm");
+    lcd.setCursor(9, 1);                     //
+    lcd.print("                         ");  //Print blanks to clear the row
+    lcd.setCursor(9, 1);
+    lcd.print(fullness);
+    lcd.print(" %");
   }
-  else if (distance <= FULL_DIST) {
-    fullness = 100;
-  }
-  else {
-    fullness = map(distance, EMPTY_DIST, FULL_DIST, 0, 100);
-  }
-  
-
-  lcd.setCursor(9,0);
-  lcd.print("                         ");  
-  lcd.setCursor(9,0);    
-  lcd.print(                distance); //Print measured distance
-  lcd.print(" cm");  //Print your units.
-  lcd.setCursor(9,1);  // 
-  lcd.print("                         "); //Print blanks to clear the row
-  lcd.setCursor(9,1);   
-  lcd.print(fullness);
-  lcd.print(" %");  //Print your units. 
-  
-  delay(2); //pause to let things settle
-
 }
